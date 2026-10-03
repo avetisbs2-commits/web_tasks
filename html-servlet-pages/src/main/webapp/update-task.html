@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Task</title>
+</head>
+<body>
+<h1>Mark Task As Done</h1>
+
+<!-- TODO:
+     HTML forms do not support PUT directly.
+     Use JavaScript fetch to call:
+     PUT /tasks?id=1
+-->
+
+<label for="taskId">Task ID</label>
+<input id="taskId" type="number" value="1">
+<button type="button" onclick="markDone()">Mark Done</button>
+
+<p id="result"></p>
+
+<script>
+    function markDone() {
+        const id = document.getElementById("taskId").value;
+
+        fetch("tasks?id=" + id, {
+            method: "PUT"
+        }).then(function (response) {
+            document.getElementById("result").textContent = "Status: " + response.status;
+        });
+    }
+</script>
+
+<p><a href="tasks.html">Back to tasks</a></p>
+</body>
+</html>
+
