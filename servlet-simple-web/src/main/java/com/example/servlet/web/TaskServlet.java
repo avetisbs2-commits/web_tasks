@@ -59,6 +59,11 @@ public class TaskServlet extends HttpServlet {
         // 2. Validate title.
         // 3. Call repository.add(title).
         // 4. Redirect back to /tasks.
+        String title = request.getParameter("title");
+        if (title == null || title.isEmpty()){
+            response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+        }
+        repository.add(title);
         response.sendRedirect("tasks");
     }
 
@@ -67,11 +72,16 @@ public class TaskServlet extends HttpServlet {
         // TODO:
         // Implement PUT request.
         // 1. Read id request parameter.
+        String s = request.getParameter("id");
         // 2. Convert id from String to int.
+        int id = Integer.parseInt(s);
         // 3. Call repository.markDone(id).
+        boolean isUpdated = repository.markDone(id);
         // 4. Return 200 if updated.
         // 5. Return 404 if task does not exist.
-        response.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
+        if (isUpdated){
+            response.setStatus(HttpServletResponse.SC_OK);
+        }else response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
 
     @Override
@@ -83,7 +93,13 @@ public class TaskServlet extends HttpServlet {
         // 3. Call repository.deleteById(id).
         // 4. Return 204 if deleted.
         // 5. Return 404 if task does not exist.
-        response.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
+        String s = request.getParameter("id");
+        int id = Integer.parseInt(s);
+        boolean bool = repository.deleteById(id);
+        if (bool){
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        }else
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
 
     private void renderTasks(PrintWriter writer, List<Task> tasks) {
